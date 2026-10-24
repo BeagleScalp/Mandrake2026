@@ -1,0 +1,522 @@
+<!DOCTYPE html><html lang="pt" dir="ltr"> 
+<!-- Mirrored from https://mandrake.kleap.io/ by HTTrack Website Copier/3.x [XR&CO], Sat, 24 Oct 2026 04:00:01 GMT -->
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="same-origin"><title>Mandrake — GTA VI para PlayStation 5 | Pagamento Pix</title><meta name="description" content="Conheça GTA VI para PlayStation 5 na Mandrake. Consulte a oferta, veja o trailer e acesse as instruções para pagamento via Pix e atendimento da loja."><link rel="canonical" href="index.html"><meta name="robots" content="index,follow"><link rel="preconnect" href="https://fonts.googleapis.com/"><link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="site.webmanifest"><meta name="astro-view-transitions-enabled" content="true"> <meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="_astro/ClientRouter.astro_astro_type_script_index_0_lang.BXnoM8sS.js"></script><script>
+      document.addEventListener("astro:page-load", function () {
+        // 🛟 SHARED force-show primitives. The three failsafes below (hero
+        // reveal, below-fold backstop, fail-open sweep) all go through
+        // kleapShow(), so all three obey the same two invariants — a failsafe
+        // must never BECOME the bug:
+        //  1. NEVER touch a stacked layer. Absolutely-positioned boxes sharing
+        //     a parent with another absolutely-positioned box (sticky video
+        //     scrollers, carousels, tab panels, image+overlay pairs) take turns
+        //     at opacity 1 BY DESIGN. Pinning them all leaves the last one in
+        //     DOM order covering the active one forever.
+        //  2. RELEASE on re-render. Whatever we pin gets its inline opacity
+        //     removed the moment the page's own JS rewrites that element's
+        //     class — an inline style outranks a framework class forever, so we
+        //     hand the element back instead of winning an argument with React.
+        //     A genuinely-stuck reveal (nothing ever re-renders it) keeps its
+        //     rescue, so fail-OPEN is preserved; an element the page keeps
+        //     re-rendering is handed back for good after one retry.
+        // Kill-switch for the broadest of the three: ASTRO_FAIL_OPEN_SWEEP=off.
+        var KLEAP_SWEEP_ON = "on" !== "off";
+        function kleapRelease(el, dur) {
+          if (!window.MutationObserver) return;
+          var mo = new MutationObserver(function () {
+            mo.disconnect();
+            el.style.removeProperty("opacity");
+            el.style.removeProperty("transform");
+            el.style.removeProperty("transition");
+            // The page's own JS just re-rendered this element's class, so it
+            // owns the element's visibility. Give it ONE more chance to be
+            // rescued (a class change can be unrelated to the stuck reveal),
+            // then stand down for good: fighting a framework that rewrites
+            // the class on every frame ends in a flicker loop and, worse, in
+            // our inline style winning permanently — the original bug.
+            if ((el.__kleapPins || 0) >= 2) { el.__kleapOwned = 1; return; }
+            setTimeout(function () { kleapShow(el, dur); }, 400);
+          });
+          // class only — observing "style" would re-fire on our own write.
+          mo.observe(el, { attributes: true, attributeFilter: ["class"] });
+        }
+        function kleapShow(el, dur) {
+          try {
+            // Detached nodes report opacity "" -> parseFloat NaN, and NaN >= 0.1
+            // is false, so without this they sail through every check below.
+            if (!el || !el.isConnected || el.__kleapOwned) return;
+            var cs = getComputedStyle(el);
+            var op = parseFloat(cs.opacity);
+            if (!(op < 0.1)) return;
+            if (cs.display === "none" || cs.visibility === "hidden") return;
+            // Hidden BY DESIGN until an interaction/breakpoint: ANY Tailwind
+            // state variant touching opacity (group-hover:opacity-100,
+            // peer-checked:, data-[state=open]:, hover:!opacity-100,
+            // group-hover:opacity-[.95], md:…). Value-agnostic on purpose —
+            // matching only digits missed arbitrary values and `!`.
+            var cls = el.getAttribute("class") || "";
+            if (/(^|\s)[^\s]+:!?opacity-/.test(cls)) return;
+            // A LAYER, not a missing section. Absolutely-positioned boxes that
+            // share a parent with another absolutely-positioned box are a
+            // cross-fade stack (sticky scrollers, carousels, tab panels) or an
+            // overlay pair: they take turns at opacity 1 by design, and force-
+            // showing them stacks every layer so the last one in DOM order
+            // covers the active one forever. A lone absolute box (a full-bleed
+            // hero background) is still rescued. No geometry comparison here on
+            // purpose: a transform on one layer (scale-105, Ken-Burns) defeats
+            // any rect matching, and transforms are exactly what these layers use.
+            if (cs.position === "absolute" || cs.position === "fixed") {
+              var p = el.parentElement;
+              var ch = p ? p.children : [];
+              for (var i = 0; i < ch.length; i++) {
+                if (ch[i] === el) continue;
+                var sc = getComputedStyle(ch[i]);
+                if (sc.position === "absolute" || sc.position === "fixed") return;
+              }
+            }
+            el.__kleapPins = (el.__kleapPins || 0) + 1;
+            el.style.transition = "opacity " + dur + " ease, transform " + dur + " ease";
+            el.style.opacity = "1";
+            el.style.transform = "none";
+            kleapRelease(el, dur);
+          } catch (e) {}
+        }
+        // Exposed so the reveal guard that runs at the end of the page
+        // (REVEAL_GUARD_SCRIPT in astro-build-runner.ts) obeys the SAME rules.
+        // It fires 300ms earlier than the sweep, and once anything has pinned
+        // an element the sweep skips it (opacity >= 0.1), so an unguarded
+        // second writer silently re-creates the bug.
+        window.__kleapShow = kleapShow;
+
+        // 🛟 REVEAL FAILSAFE (runs ALWAYS, even reduced-motion). Scroll-reveals on
+        // ABOVE-THE-FOLD content — especially the hero — frequently never fire:
+        // ScrollTrigger waits for the element to scroll INTO view, but an already-
+        // visible hero never does, so its [data-reveal] wrapper stays opacity:0 and
+        // the first screen ships BLANK. After giving GSAP a beat to play, force any
+        // still-hidden [data-reveal] that sits in the initial viewport to appear.
+        // Only touches at/above-the-fold elements → below-fold reveals still animate.
+        function revealFailsafe() {
+          var vh = window.innerHeight || 800;
+          document.querySelectorAll("[data-reveal]").forEach(function (el) {
+            if (el.getBoundingClientRect().top < vh * 1.05) kleapShow(el, ".5s");
+          });
+        }
+        setTimeout(revealFailsafe, 1400);
+        window.addEventListener("load", function () { setTimeout(revealFailsafe, 700); });
+
+        // 🛟 BELOW-THE-FOLD reveal backstop (runs ALWAYS, even reduced-motion).
+        // The above failsafe only rescues elements already in the first viewport.
+        // BELOW-fold [data-reveal] wrappers depend on the generator's GSAP/ScrollTrigger
+        // firing as they scroll into view — but when ScrollTrigger silently fails
+        // (Lenis desync, not loaded, wrong trigger) those sections stay at
+        // opacity:0 FOREVER, so whole sections (testimonials, pricing, feature
+        // bento) ship INVISIBLE and the page looks broken/empty. This
+        // IntersectionObserver reveals any still-hidden [data-reveal] as it
+        // enters view, independent of GSAP. The 550ms grace gives GSAP first
+        // crack (so working reveals still animate); we only force-show what's
+        // still hidden after that. unobserve after first hit = zero ongoing cost.
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (!e.isIntersecting) return;
+              var el = e.target;
+              io.unobserve(el);
+              setTimeout(function () { kleapShow(el, ".6s"); }, 550);
+            });
+          }, { rootMargin: "0px 0px -8% 0px" });
+          document.querySelectorAll("[data-reveal]").forEach(function (el) { io.observe(el); });
+        }
+
+        // 🛟 FAIL-OPEN SWEEP (last resort, runs ALWAYS). The generator often animates
+        // reveals via ad-hoc GSAP selectors (gsap.from(".card",{opacity:0}),
+        // a stagger on ".testimonial") with NO [data-reveal] marker — so when
+        // ScrollTrigger desyncs, those cards/sections stay opacity:0 and ship
+        // INVISIBLE even though the content is fully in the DOM (a real, common
+        // "site looks broken/empty" report). 2.8s after load, force-show ANY
+        // element still stuck at opacity:0 that has real content — while leaving
+        // genuinely-hidden UI (modals, dropdowns, tooltips, display:none) alone.
+        //
+        // ⚠️ Only what the visitor has ALREADY REACHED (in view or above). An
+        // element still below the fold at 2.8s is not stuck, it is WAITING for
+        // its scroll-reveal — pinning it to opacity 1 there killed every CSS
+        // scroll animation on the page (app 345, 2026-10-01: "add motion" turned
+        // into a page where nothing ever moved). Below-fold candidates are
+        // watched instead and rescued only if they are STILL hidden 1.2s after
+        // scrolling into view, so a broken ScrollTrigger still fails open.
+        // Automated browsers (navigator.webdriver: previewTest, screenshots,
+        // the publish checks) never scroll like a visitor — their full-page
+        // capture would show every waiting reveal as an empty band, and the
+        // agent then "fixes" a site that is fine. For them, keep forcing
+        // everything visible, as before.
+        var kleapArrivalIO = null;
+        function kleapWatchArrival(el) {
+          if (el.__kleapWatched) return;
+          if (!("IntersectionObserver" in window)) { kleapShow(el, ".5s"); return; }
+          el.__kleapWatched = 1;
+          if (!kleapArrivalIO) {
+            kleapArrivalIO = new IntersectionObserver(function (entries) {
+              entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                var t = e.target;
+                kleapArrivalIO.unobserve(t);
+                setTimeout(function () { kleapShow(t, ".6s"); }, 1200);
+              });
+            }, { rootMargin: "0px 0px -8% 0px" });
+          }
+          kleapArrivalIO.observe(el);
+        }
+        function failOpenSweep() {
+          var vh = window.innerHeight || 800;
+          var nodes = document.querySelectorAll("main *, section, section *, footer *, [data-reveal]");
+          // Two passes — collect (pure reads) then write — so our own opacity
+          // writes don't force a style recalc for every later getComputedStyle.
+          var todo = [];
+          for (var i = 0; i < nodes.length; i++) {
+            var el = nodes[i];
+            var cs = getComputedStyle(el);
+            if (parseFloat(cs.opacity) >= 0.1) continue;
+            if (cs.display === "none" || cs.visibility === "hidden") continue;
+            if (el.closest("[hidden],[aria-hidden='true'],[role='dialog'],[role='menu'],[role='tooltip'],[role='listbox'],.modal,dialog:not([open]),details:not([open])")) continue;
+            var r = el.getBoundingClientRect();
+            if (r.width < 8 || r.height < 8) continue;
+            if (!(el.textContent || "").trim() && !el.querySelector("img,svg,video,canvas,picture")) continue;
+            if (r.top >= vh && !navigator.webdriver) { kleapWatchArrival(el); continue; }
+            todo.push(el);
+          }
+          for (var j = 0; j < todo.length; j++) kleapShow(todo[j], ".5s");
+        }
+        if (KLEAP_SWEEP_ON) {
+          setTimeout(failOpenSweep, 2800);
+          window.addEventListener("load", function () { setTimeout(failOpenSweep, 3200); });
+        }
+
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        function init() {
+          if (window.__lenis) { try { window.__lenis.destroy(); } catch (e) {} }
+          var l = new window.Lenis({ lerp: 0.1 });
+          window.__lenis = l;
+          function raf(t) { l.raf(t); requestAnimationFrame(raf); }
+          requestAnimationFrame(raf);
+          // 🔗 Sync Lenis → ScrollTrigger. WITHOUT this, ScrollTrigger never sees
+          // Lenis's smooth scroll, so EVERY scroll-reveal stays at opacity:0 and the
+          // page content is invisible (root cause of the empty section). ScrollTrigger
+          // is loaded by the generator's motion block and may arrive AFTER Lenis, so the
+          // handler re-checks each scroll instead of binding to it once.
+          l.on("scroll", function () { if (window.ScrollTrigger) window.ScrollTrigger.update(); });
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        }
+        if (window.Lenis) { init(); }
+        else {
+          var s = document.createElement("script");
+          s.src = "../cdn.jsdelivr.net/npm/lenis%401/dist/lenis.min.js";
+          s.onload = init;
+          document.head.appendChild(s);
+        }
+      });
+    </script><script>
+      (function () {
+        function placeholder(img) {
+          if (img.dataset.kfx) return;
+          img.dataset.kfx = "1";
+          img.removeAttribute("src");
+          img.removeAttribute("srcset");
+          img.style.background =
+            "linear-gradient(135deg, var(--surface, #e9e4dc), var(--accent-color, var(--accent, #b9a48a)))";
+          img.style.objectFit = "cover";
+          if (!img.getAttribute("width") && !img.style.minHeight)
+            img.style.minHeight = "200px";
+        }
+        document.addEventListener(
+          "error",
+          function (e) {
+            var t = e.target;
+            if (t && t.tagName === "IMG") placeholder(t);
+          },
+          true,
+        );
+        function sweep() {
+          document.querySelectorAll("img").forEach(function (img) {
+            if (img.complete && img.naturalWidth === 0 && img.getAttribute("src"))
+              placeholder(img);
+          });
+        }
+        document.addEventListener("DOMContentLoaded", sweep);
+        document.addEventListener("astro:page-load", sweep);
+        addEventListener("load", sweep);
+      })();
+    </script><meta property="og:title" content="Mandrake — GTA VI para PlayStation 5 | Pagamento Pix"><meta property="og:description" content="Conheça GTA VI para PlayStation 5 na Mandrake. Consulte a oferta, veja o trailer e acesse as instruções para pagamento via Pix e atendimento da loja."><meta property="og:type" content="website"><meta property="og:url" content="index.html"><meta property="og:site_name" content="Mandrake"><meta property="og:image" content="https://kleap.co/api/og-image/124650?v=kdvmvlv1r31j1hufiak"><meta property="og:image:alt" content="Mandrake — GTA VI para PlayStation 5 | Pagamento Pix"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://kleap.co/api/og-image/124650?v=kdvmvlv1r31j1hufiak"><meta name="twitter:title" content="Mandrake — GTA VI para PlayStation 5 | Pagamento Pix"><meta name="twitter:description" content="Conheça GTA VI para PlayStation 5 na Mandrake. Consulte a oferta, veja o trailer e acesse as instruções para pagamento via Pix e atendimento da loja."><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Mandrake","url":"https://mandrake.kleap.io/"},{"@type":"WebPage","name":"Mandrake — GTA VI para PlayStation 5 | Pagamento Pix","description":"Conheça GTA VI para PlayStation 5 na Mandrake. Consulte a oferta, veja o trailer e acesse as instruções para pagamento via Pix e atendimento da loja.","url":"https://mandrake.kleap.io/","dateModified":"2026-10-24T03:50:25.851Z"}]}</script><link rel="stylesheet" href="_astro/Base.BsA8G0fH.css"><link rel="stylesheet" href="_astro/index.BJXOCvM2.css">
+
+<script src="_kleap.js"></script>
+<script>
+(function(){
+  "use strict";
+  // Lire l'ID depuis _kleap.js local, puis fetch config dynamique depuis API
+  function waitForConfig(cb,a){a=a||0;if(window._kleap&&window._kleap.id){cb();}else if(a<50){setTimeout(function(){waitForConfig(cb,a+1);},100);}}
+  waitForConfig(function(){
+    var appId=window._kleap.id;
+    // Fetch config dynamique depuis l'API Kleap (permet changements sans redeploy)
+    fetch("https://kleap.co/api/public/apps/"+appId+"/config")
+      .then(function(r){return r.json();})
+      .then(function(c){
+        // Badge
+        if(c.badge&&!document.querySelector("[data-kleap-badge]")){
+          var b=document.createElement("div");
+          b.setAttribute("data-kleap-badge","true");
+          b.style.cssText="position:fixed;bottom:20px;right:20px;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;";
+          var l=document.createElement("a");
+          l.href="https://kleap.co/made-with-kleap?utm_source=badge&utm_medium=built-with&utm_campaign=app-"+appId+"&ref="+appId;
+          l.target="_blank";l.rel="noopener";l.title="Made with Kleap";l.setAttribute("aria-label","Made with Kleap");
+          l.style.cssText="display:inline-flex;align-items:center;gap:4px;padding:8px 12px;background:white;color:#000;text-decoration:none;font-size:14px;font-weight:500;border-radius:6px;box-shadow:0 0 0 1px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.12);transition:all 0.15s ease;";
+          l.innerHTML='Made with <strong style="color:#ff0055;">Kleap</strong>';
+          l.onmouseenter=function(){this.style.transform="translateY(-2px)";this.style.boxShadow="0 0 0 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.08)";};
+          l.onmouseleave=function(){this.style.transform="translateY(0)";this.style.boxShadow="0 0 0 1px rgba(0,0,0,0.1),0 2px 4px rgba(0,0,0,0.05)";};
+          b.appendChild(l);document.body.appendChild(b);
+        }
+        if(c.badge&&!document.querySelector("script[data-kleap-badge-smart]")){
+          var sm=document.createElement("script");sm.defer=true;
+          sm.src="../kleap.co/cdn/kleap-badge.js";
+          sm.setAttribute("data-kleap-badge-smart","");sm.setAttribute("data-app",String(appId));
+          document.body.appendChild(sm);
+        } else if(c.badge===false) {
+          var existing=document.querySelector("[data-kleap-badge]");
+          if(existing&&existing.parentNode) existing.parentNode.removeChild(existing);
+        }
+        // Analytics
+        if(c.analytics&&!document.querySelector('[data-website-id="'+c.analytics+'"]')){
+          var s=document.createElement("script");s.async=true;s.defer=true;
+          var u=(c.umami_url||"https://analytics-v2.kleap.co");s.src=(u.charAt(u.length-1)==="/"?u.slice(0,-1):u)+"/script.js";
+          s.setAttribute("data-website-id",c.analytics);
+          document.head.appendChild(s);
+        }
+        // Clics de contact (KLE-628) : Appeler, WhatsApp, e-mail, itinéraire.
+        // La seule mesure qui parle d'argent pour un site qui vise des contacts.
+        // Un seul écouteur, délégué : marche aussi sur les liens ajoutés après.
+        if(c.analytics&&!window.__kleapContactTrack){
+          window.__kleapContactTrack=true;
+          document.addEventListener("click",function(e){
+            var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
+            var h=(a.getAttribute("href")||"").toLowerCase();
+            var t=h.indexOf("tel:")===0?"call":h.indexOf("mailto:")===0?"email":(h.indexOf("wa.me/")>-1||h.indexOf("whatsapp")>-1)?"whatsapp":(h.indexOf("google.com/maps")>-1||h.indexOf("maps.google")>-1||h.indexOf("maps.app.goo.gl")>-1||h.indexOf("maps.apple")>-1)?"maps":null;
+            if(t&&window.umami&&window.umami.track){try{window.umami.track("contact-"+t);}catch(_){}}
+          },true);
+        }
+      })
+      .catch(function(){/* Silently fail if API unavailable */});
+  });
+})();
+</script>
+
+<meta name="kleap-deploy" content="kdvmvlv1r31j1hufiak"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://mandrake.kleap.io/#organization","name":"Mandrake","url":"https://mandrake.kleap.io/","logo":"https://kleap.co/api/og-image/124650?v=kdvmvlv1r31j1hufiak"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mandrake.kleap.io/"}]}]}</script><style id="kleap-failopen">body{opacity:1 !important;transition:none !important}</style></head> <body class="min-h-screen bg-background text-foreground antialiased">
+<div data-kleap-badge="true" style="position:fixed;bottom:20px;right:20px;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;"><style>@media (max-width:640px){[data-kleap-badge]{bottom:12px!important;right:12px!important}[data-kleap-badge] a{padding:4px 8px!important;font-size:11px!important;line-height:16px!important;gap:3px!important;border-radius:999px!important}}</style><a href="https://kleap.co/made-with-kleap?utm_source=badge&amp;utm_medium=built-with&amp;utm_campaign=app-124650&amp;ref=124650" target="_blank" rel="noopener" title="Made with Kleap" aria-label="Made with Kleap" style="display:inline-flex;align-items:center;gap:4px;padding:8px 12px;background:white;color:#000;text-decoration:none;font-size:14px;font-weight:500;border-radius:6px;box-shadow:0 0 0 1px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.12);transition:all 0.15s ease;">Made with <strong style="color:#ff0055;">Kleap</strong></a></div>  <div class="store" data-astro-cid-lcdefpme> <header data-astro-cid-lcdefpme><a class="brand" href="index.html" data-astro-cid-lcdefpme>MANDRAKE<span data-astro-cid-lcdefpme>GAMES</span></a><nav data-astro-cid-lcdefpme><a href="#sobre" data-astro-cid-lcdefpme>O jogo</a><a href="#pagamento" data-astro-cid-lcdefpme>Pagamento</a><a href="#contato" data-astro-cid-lcdefpme>Atendimento</a></nav><span class="platform" data-astro-cid-lcdefpme>PLAYSTATION 5</span></header> <main data-astro-cid-lcdefpme> <section class="hero" id="intro" data-astro-cid-lcdefpme> <img class="hero-image" src="uploads/herokeyart.jpg" alt="Vista de Vice City em Grand Theft Auto VI" fetchpriority="high" data-astro-cid-lcdefpme> <div class="hero-shade" data-astro-cid-lcdefpme></div> <div class="hero-copy" data-astro-cid-lcdefpme><span class="eyebrow" data-astro-cid-lcdefpme>VICE CITY ESTÁ CHAMANDO</span><img src="uploads/gta6-logo.png" alt="Grand Theft Auto VI" width="310" height="240" style="width: min(310px, 80%); height: auto; margin: 28px 0;" data-astro-cid-lcdefpme><h1 data-astro-cid-lcdefpme>Sua próxima grande história começa em Vice City.</h1><p data-astro-cid-lcdefpme>Entre no universo de GTA VI com a Mandrake.<br data-astro-cid-lcdefpme><strong data-astro-cid-lcdefpme>Ultimate Edition · PS5 | VERSÃO DIGITAL</strong><br data-astro-cid-lcdefpme>Quer saber como funciona? Converse com a loja e tire suas dúvidas antes de comprar.</p><div class="actions" data-astro-cid-lcdefpme><a class="button" href="#pagamento" data-astro-cid-lcdefpme>Quero minha versão digital ↗</a><a class="trailer" href="https://www.youtube.com/watch?v=QdBZY2fkU-0" target="_blank" rel="noopener noreferrer" data-astro-cid-lcdefpme>▷ Assistir ao trailer</a></div></div> <aside class="offer" data-astro-cid-lcdefpme><div class="offer-heading" data-astro-cid-lcdefpme><img src="uploads/playstation-5.svg" alt="PlayStation 5" width="130" data-astro-cid-lcdefpme><span class="offer-label" data-astro-cid-lcdefpme>OFERTA MANDRAKE</span></div><img class="offer-art" src="uploads/vice-city-09-thumb.jpg" alt="Vice City em GTA VI" data-astro-cid-lcdefpme><div class="offer-body" data-astro-cid-lcdefpme><span class="eyebrow" data-astro-cid-lcdefpme>SUA ESCOLHA PARA JOGAR</span><div class="selected-platform" data-astro-cid-lcdefpme>✓ PlayStation 5</div><h2 data-astro-cid-lcdefpme>Grand Theft Auto VI<br data-astro-cid-lcdefpme>Ultimate Edition</h2><p class="offer-description" data-astro-cid-lcdefpme>PS5 | VERSÃO DIGITAL · Mídia digital<br data-astro-cid-lcdefpme>Sua oferta em um só lugar, com atendimento direto da Mandrake para orientar sua compra.</p><div class="offer-total" data-astro-cid-lcdefpme><span data-astro-cid-lcdefpme>Pagamento à vista<br data-astro-cid-lcdefpme><small data-astro-cid-lcdefpme>via Pix</small></span><strong class="price" data-astro-cid-lcdefpme>R$ 200<span data-astro-cid-lcdefpme>,00</span></strong></div><a class="button" href="#pagamento" data-astro-cid-lcdefpme>Quero comprar com Pix →</a><a class="offer-support" href="https://wa.me/5541988343733?text=Ol%C3%A1%2C%20Mandrake!%20Quero%20saber%20mais%20sobre%20GTA%20VI%20para%20PS5%20e%20as%20condi%C3%A7%C3%B5es%20de%20entrega." target="_blank" rel="noopener noreferrer" data-astro-cid-lcdefpme>Tirar dúvidas pelo WhatsApp ↗</a></div></aside> </section> <div class="strip" data-astro-cid-lcdefpme><span data-astro-cid-lcdefpme>MANDRAKE GAMES</span><span data-astro-cid-lcdefpme>EXCLUSIVO NESTA OFERTA: PS5</span><span data-astro-cid-lcdefpme>PAGAMENTO VIA PIX</span></div> <section class="mandrake-gallery" aria-label="Imagens de GTA VI" data-astro-cid-lcdefpme><img src="uploads/vice-city-09-thumb.jpg" alt="Paisagem de Vice City" loading="lazy" data-astro-cid-lcdefpme><img src="uploads/lucia-caminos-02-thumb.jpg" alt="Lucia Caminos em GTA VI" loading="lazy" data-astro-cid-lcdefpme><img src="uploads/jason-duval-05-thumb.jpg" alt="Jason Duval em GTA VI" loading="lazy" data-astro-cid-lcdefpme><img src="uploads/ambrosia-01-thumb.jpg" alt="Ambrosia em Leonida" loading="lazy" data-astro-cid-lcdefpme></section><section id="sobre" class="about" data-astro-cid-lcdefpme><div data-astro-cid-lcdefpme><span class="eyebrow" data-astro-cid-lcdefpme>BEM-VINDO A LEONIDA</span><h2 data-astro-cid-lcdefpme>Do sol de Vice City<br data-astro-cid-lcdefpme>ao lado mais intenso<br data-astro-cid-lcdefpme>de uma nova história.</h2></div><div data-astro-cid-lcdefpme><p data-astro-cid-lcdefpme>Grand Theft Auto VI apresenta Jason e Lucia no estado fictício de Leonida. Quando um serviço simples dá errado, os dois precisam depender um do outro para sobreviver em meio a uma conspiração criminosa.</p><p data-astro-cid-lcdefpme>A Mandrake apresenta a <strong data-astro-cid-lcdefpme>Ultimate Edition para PlayStation 5 | VERSÃO DIGITAL</strong>. Prefere esclarecer tudo primeiro? Fale com a loja sobre disponibilidade, conteúdo da edição, forma de acesso e prazo de entrega. Assim você decide com todas as informações em mãos.</p><a class="text-link" href="https://wa.me/5541988343733?text=Ol%C3%A1%2C%20Mandrake!%20Tenho%20interesse%20no%20GTA%20VI%20Ultimate%20Edition%20para%20PS5%20digital.%20Pode%20explicar%20a%20disponibilidade%2C%20o%20conte%C3%BAdo%20da%20edi%C3%A7%C3%A3o%2C%20a%20forma%20de%20acesso%20e%20o%20prazo%20de%20entrega%3F" target="_blank" rel="noopener noreferrer" data-astro-cid-lcdefpme>Quero conhecer a oferta pelo WhatsApp ↗</a><img src="uploads/about-img.png" srcset="uploads/about-img-p-500.png 500w, uploads/about-img.png 679w" sizes="(max-width: 760px) 90vw, 40vw" alt="Arte de Grand Theft Auto VI" loading="lazy" style="width:100%;height:auto;margin-top:28px;" data-astro-cid-lcdefpme></div></section> <section id="pagamento" class="payment" data-astro-cid-lcdefpme><div data-astro-cid-lcdefpme><span class="eyebrow" data-astro-cid-lcdefpme>PAGAMENTO DIRETO</span><h2 data-astro-cid-lcdefpme>Abra seu banco.<br data-astro-cid-lcdefpme>Escolha Pix.</h2><p data-astro-cid-lcdefpme>Escaneie o QR Code ou copie o código Pix Copia e Cola. O valor indicado é <strong data-astro-cid-lcdefpme>R$ 200,00</strong>.</p><ol data-astro-cid-lcdefpme><li data-astro-cid-lcdefpme>Confira o valor e o titular exibidos pelo seu banco.</li><li data-astro-cid-lcdefpme>Confirme o pagamento somente se os dados estiverem corretos.</li><li data-astro-cid-lcdefpme>Entre em contato com a Mandrake para conferir seu pedido.</li></ol><p class="note" data-astro-cid-lcdefpme>Este é um Pix estático. A página não verifica transferências nem confirma pedidos automaticamente.</p></div><div class="pix-card" data-astro-cid-lcdefpme><div class="pix-top" data-astro-cid-lcdefpme><strong data-astro-cid-lcdefpme>Pix</strong><span data-astro-cid-lcdefpme>Ultimate Edition · PS5 · Digital</span></div><img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&amp;margin=16&amp;data=00020126330014br.gov.bcb.pix0111106800239505204000053039865406200.005802BR5908MANDRAKE6006BRASIL62070503***63046A85" alt="QR Code Pix para pagamento à Mandrake" width="280" height="280" loading="lazy" data-astro-cid-lcdefpme><strong class="pix-value" data-astro-cid-lcdefpme>R$ 200,00</strong><p data-astro-cid-lcdefpme>Chave Pix: <strong data-astro-cid-lcdefpme>10680023950</strong></p><textarea id="pix-code" readonly aria-label="Código Pix Copia e Cola" data-astro-cid-lcdefpme>00020126330014br.gov.bcb.pix0111106800239505204000053039865406200.005802BR5908MANDRAKE6006BRASIL62070503***63046A85</textarea><button id="copy-pix" class="button" type="button" data-astro-cid-lcdefpme>Copiar Pix Copia e Cola</button><p id="copy-status" aria-live="polite" data-astro-cid-lcdefpme>Confira o destinatário no aplicativo do banco.</p></div></section> <section class="contact" id="contato" data-astro-cid-lcdefpme><div data-astro-cid-lcdefpme><span class="eyebrow" data-astro-cid-lcdefpme>ATENDIMENTO MANDRAKE</span><h2 data-astro-cid-lcdefpme>Gostou da oferta?<br data-astro-cid-lcdefpme>Vamos tirar suas dúvidas.</h2><p data-astro-cid-lcdefpme>Você não precisa decidir com uma pergunta sem resposta. Fale diretamente com a Mandrake sobre a Ultimate Edition, compatibilidade com PS5, acesso à mídia digital e entrega.</p><p data-astro-cid-lcdefpme><strong data-astro-cid-lcdefpme>Já decidiu?</strong> Diga “Quero a Ultimate Edition para PS5” na mensagem. Já realizou o Pix? Informe o identificador da transferência para a loja conferir seu pedido.</p></div><div class="whatsapp-contact" data-astro-cid-lcdefpme><h3 data-astro-cid-lcdefpme>Seu próximo passo é simples.</h3><p data-astro-cid-lcdefpme>Conte o que você precisa e continue a conversa com a loja no WhatsApp.</p><label for="whatsapp-name" data-astro-cid-lcdefpme>Seu nome</label><input id="whatsapp-name" type="text" autocomplete="name" placeholder="Como podemos chamar você?" data-astro-cid-lcdefpme><label for="whatsapp-question" data-astro-cid-lcdefpme>Mensagem</label><textarea id="whatsapp-question" rows="4" placeholder="Escreva sua dúvida sobre o jogo ou seu pedido" data-astro-cid-lcdefpme></textarea><a id="whatsapp-send" class="button" href="https://wa.me/5541988343733?text=Ol%C3%A1%2C%20Mandrake!%20Tenho%20uma%20d%C3%BAvida%20sobre%20GTA%20VI%20para%20PS5." target="_blank" rel="noopener noreferrer" data-astro-cid-lcdefpme>Conversar com a Mandrake ↗</a><p data-astro-cid-lcdefpme>Sua mensagem será aberta no WhatsApp para você enviar.</p><a href="https://wa.me/5541988343733" target="_blank" rel="noopener noreferrer" data-astro-cid-lcdefpme>(41) 98834-3733</a></div></section> </main><footer data-astro-cid-lcdefpme><a href="index.html" class="brand" data-astro-cid-lcdefpme>MANDRAKE<span data-astro-cid-lcdefpme>GAMES</span></a><p data-astro-cid-lcdefpme>© 2026 Mandrake. GTA e PlayStation são marcas de seus respectivos titulares.</p><a href="#intro" data-astro-cid-lcdefpme>Voltar ao topo ↑</a></footer> <a class="whatsapp-float" href="https://wa.me/5541988343733?text=Ol%C3%A1%2C%20Mandrake!%20Preciso%20de%20ajuda%20com%20GTA%20VI%20para%20PS5." target="_blank" rel="noopener noreferrer" aria-label="Falar com a Mandrake no WhatsApp" data-astro-cid-lcdefpme><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" data-astro-cid-lcdefpme><path d="M21 11.5a9 9 0 0 1-13.5 7.8L3 21l1.5-4.6A9 9 0 1 1 21 11.5Z" data-astro-cid-lcdefpme></path><path d="M8 7c0 5 4 9 9 9l1-3-3-1-1 1c-2-1-3-2-4-4l1-1-1-2Z" data-astro-cid-lcdefpme></path></svg><span data-astro-cid-lcdefpme>Tire suas dúvidas</span></a> </div><script type="module">globalThis.process??={},globalThis.process.env??={},document.addEventListener(`astro:page-load`,()=>{let e=document.querySelector(`#whatsapp-send`),t=()=>{let t=document.querySelector(`#whatsapp-name`)?.value.trim(),n=document.querySelector(`#whatsapp-question`)?.value.trim();e&&(e.href=`https://wa.me/5541988343733?text=`+encodeURIComponent(`Olá, Mandrake! `+(t?`Meu nome é `+t+`. `:``)+(n||`Tenho uma dúvida sobre GTA VI para PS5.`)))};document.querySelector(`#whatsapp-name`)?.addEventListener(`input`,t),document.querySelector(`#whatsapp-question`)?.addEventListener(`input`,t),document.querySelector(`#copy-pix`)?.addEventListener(`click`,async()=>{let e=document.querySelector(`#pix-code`),t=document.querySelector(`#copy-status`);if(e&&t)try{await navigator.clipboard.writeText(e.value),t.textContent=`Código Pix copiado! Cole no aplicativo do seu banco.`}catch{e.select(),t.textContent=`Selecione e copie o código acima para usar no seu banco.`}})});</script>   <script>
+      (function () {
+        if ("on" === "off") return;
+(function(){var S='[class*="animate-fade"],[class*="animate-in"],[class*="animate-slide"],[class*="animate-zoom"],[data-reveal]';function skip(el){for(var n=el;n&&n!==document.body;n=n.parentElement){if(n.nodeType!==1)continue;var cs=getComputedStyle(n);if(cs.display==="none"||cs.visibility==="hidden")return true;if(n.getAttribute("aria-hidden")==="true"||n.hasAttribute("hidden")||n.getAttribute("data-state")==="closed"||n.getAttribute("aria-expanded")==="false")return true;}var c=getComputedStyle(el);if(c.position==="absolute"||c.position==="fixed"){var p=el.parentElement;if(p){var ch=p.children;for(var i=0;i<ch.length;i++){var sib=ch[i];if(sib!==el){var sc=getComputedStyle(sib);if((sc.position==="absolute"||sc.position==="fixed")&&parseFloat(sc.opacity)>=0.99)return true;}}}}return false;}function show(el){try{if(skip(el))return;if(window.__kleapShow)window.__kleapShow(el,".5s");}catch(e){}}function run(){var els=[].slice.call(document.querySelectorAll(S));if(!els.length)return;if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show(e.target);io.unobserve(e.target);}});},{rootMargin:"0px 0px -8% 0px"});els.forEach(function(el){io.observe(el);});}setTimeout(function(){var vh=window.innerHeight||800;els.forEach(function(el){if(navigator.webdriver||el.getBoundingClientRect().top<vh)show(el);});},2500);}if(document.readyState!=="loading")run();else document.addEventListener("DOMContentLoaded",run);})();
+      })();
+    </script><script src="../kleap.co/cdn/kleap-badge.js" defer data-kleap-badge-smart data-app="124650"></script>
+<script>(function () {
+        var ID = "kleap-mobile-menu";
+        function openMenu() {
+          var m = document.getElementById(ID);
+          if (!m) return;
+          m.style.display = "block";
+          m.removeAttribute("hidden");
+          document.documentElement.style.overflow = "hidden";
+        }
+        function closeMenu() {
+          var m = document.getElementById(ID);
+          if (!m) return;
+          m.style.display = "none";
+          m.setAttribute("hidden", "");
+          document.documentElement.style.overflow = "";
+        }
+        function collectLinks(scope) {
+          var links = [], seen = {};
+          scope.querySelectorAll("a[href]").forEach(function (a) {
+            var href = a.getAttribute("href");
+            var label = (a.textContent || "").replace(/\s+/g, " ").trim();
+            if (!href || href.charAt(0) === "#") return;
+            if (!label || label.length < 2) return; // skip logo / icon-only links
+            if (a.querySelector("img, svg") && label.length < 3) return;
+            var key = href + "|" + label.toLowerCase();
+            if (seen[key]) return;
+            seen[key] = 1;
+            links.push({ href: href, label: label });
+          });
+          return links;
+        }
+        function navScope() {
+          // header>nav is the usual nav bar, but some sites leave it empty and put
+          // the links directly in <header> (or only have a bare <nav>). Pick the
+          // first scope that yields a real menu (>=2 links).
+          var cands = [
+            document.querySelector("header nav"),
+            document.querySelector("nav"),
+            document.querySelector("header"),
+          ];
+          for (var i = 0; i < cands.length; i++) {
+            if (cands[i] && collectLinks(cands[i]).length >= 2) return cands[i];
+          }
+          return null;
+        }
+        function navLinks() {
+          var s = navScope();
+          return s ? collectLinks(s) : [];
+        }
+        function ensureDrawer() {
+          var links = navLinks();
+          if (links.length < 2) return false;
+          var old = document.getElementById(ID);
+          if (old) old.remove();
+          var ov = document.createElement("div");
+          ov.id = ID;
+          ov.setAttribute("hidden", "");
+          ov.style.cssText = "position:fixed;inset:0;z-index:2147483600;display:none;";
+          var back = document.createElement("div");
+          back.style.cssText = "position:absolute;inset:0;background:rgba(0,0,0,.55);";
+          back.addEventListener("click", closeMenu);
+          var panel = document.createElement("nav");
+          panel.setAttribute("aria-label", "Menu");
+          panel.style.cssText =
+            "position:absolute;top:0;right:0;bottom:0;width:84%;max-width:340px;background:#fff;color:#111;padding:18px 22px;box-shadow:-8px 0 32px rgba(0,0,0,.28);overflow-y:auto;display:flex;flex-direction:column;gap:2px;";
+          var x = document.createElement("button");
+          x.setAttribute("aria-label", "Fermer");
+          x.innerHTML = "&times;";
+          x.style.cssText =
+            "align-self:flex-end;background:none;border:0;font-size:34px;line-height:1;color:#111;cursor:pointer;padding:2px 6px 10px;";
+          x.addEventListener("click", closeMenu);
+          panel.appendChild(x);
+          links.forEach(function (l) {
+            var a = document.createElement("a");
+            a.href = l.href;
+            a.textContent = l.label;
+            a.style.cssText =
+              "display:block;padding:14px 4px;font-size:18px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #ececec;";
+            a.addEventListener("click", closeMenu);
+            panel.appendChild(a);
+          });
+          ov.appendChild(back);
+          ov.appendChild(panel);
+          document.body.appendChild(ov);
+          return true;
+        }
+        function findHamburger() {
+          var hits = [];
+          document.querySelectorAll("header, nav").forEach(function (scope) {
+            scope
+              .querySelectorAll('[class*="lg:hidden"], [class*="md:hidden"]')
+              .forEach(function (c) {
+                var svgs = c.querySelectorAll("svg");
+                if (svgs.length) hits.push(svgs[svgs.length - 1].closest("button, a") || svgs[svgs.length - 1]);
+              });
+          });
+          return hits;
+        }
+        function injectHamburger() {
+          var host =
+            document.querySelector("header nav") ||
+            document.querySelector("header") ||
+            document.querySelector("nav");
+          if (!host) return false;
+          var btn = document.createElement("button");
+          btn.id = "kleap-burger";
+          btn.className = "lg:hidden"; // reuse the app's Tailwind: hidden ≥ lg
+          btn.setAttribute("aria-label", "Menu");
+          btn.style.cssText =
+            "position:fixed;top:14px;right:14px;z-index:2147483500;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.12);cursor:pointer;";
+          btn.innerHTML =
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+          document.body.appendChild(btn);
+          return true;
+        }
+        function visibleNavCount(scope) {
+          if (!scope) return 0;
+          var n = 0;
+          scope.querySelectorAll("a[href]").forEach(function (a) {
+            var label = (a.textContent || "").replace(/\s+/g, " ").trim();
+            if (!label || label.length < 2) return;
+            if (a.querySelector("img, svg") && label.length < 3) return; // logo
+            var r = a.getBoundingClientRect();
+            if (a.offsetParent !== null && r.width > 0 && r.left < window.innerWidth) n++;
+          });
+          return n;
+        }
+        // 🛑 HANDS OFF a site that already has its own working mobile menu.
+        // Helping there does not ADD a menu, it REPLACES a working one: the
+        // handler below calls preventDefault(), and on a <label for> that is
+        // precisely what stops the checkbox from toggling — so the site's own
+        // drawer never opens and ours does, in white, over their design, out of
+        // any file they can edit. Reported verbatim by the owner of
+        // rhonyscar.fr: "impossible de supprimer la navbar coulissante
+        // blanche". Only CSS-only disclosures are detected, because those are
+        // the ones the DOM proves complete: a <label for> pointing at a real
+        // checkbox, or a `peer-checked:` class (Tailwind only emits that rule
+        // if the class is there). A bare aria-expanded is NOT evidence — the
+        // model decorates icons with it and wires nothing, which is the exact
+        // dead menu this whole block exists to rescue.
+        function siteOwnsMenu() {
+          var scopes = document.querySelectorAll("header, nav");
+          for (var i = 0; i < scopes.length; i++) {
+            var s = scopes[i];
+            // A <details> proves itself: the browser toggles it, no CSS needed.
+            if (s.querySelector("details > summary")) return true;
+            // 🚨 A `peer-checked:` class is NOT proof on its own. Tailwind
+            // compiles it to `.peer:checked ~ …`, so the rule only EXISTS if
+            // some element actually carries `peer`. Measured on app 88583
+            // (zee-news.kleap.io): the checkbox is `class="hidden"` with no
+            // `peer` anywhere, Tailwind emitted ZERO matching rules
+            // (`cssRules matching /peer.*checked/ → []`), and forcing
+            // `checked = true` leaves the drawer at display:none — that menu has
+            // never opened. Its header shows 2 links on mobile against 19 in the
+            // drawer, so OUR rescue is its only navigation. Requiring the wired
+            // sibling keeps us rescuing it while still standing off the sites
+            // that really do own a menu.
+            if (s.querySelector('.peer ~ [class*="peer-checked:"]')) return true;
+            var labels = s.querySelectorAll("label[for]");
+            for (var j = 0; j < labels.length; j++) {
+              var ctl = document.getElementById(labels[j].getAttribute("for"));
+              // Same reason for the label branch: 88583 trips it too (real
+              // label → real checkbox), so the control must be a wired `peer`.
+              if (
+                ctl &&
+                (ctl.type === "checkbox" || ctl.type === "radio") &&
+                ctl.classList.contains("peer")
+              )
+                return true;
+            }
+          }
+          return false;
+        }
+        function setup() {
+          if (siteOwnsMenu()) return;
+          var scope = navScope();
+          if (!scope) return;
+          var links = collectLinks(scope);
+          if (links.length < 2) return; // nothing to put in a menu
+          if (visibleNavCount(scope) >= links.length) return; // ALL links already inline → no menu needed
+          if (!ensureDrawer()) return;
+          var burgers = findHamburger();
+          if (!burgers.length) {
+            var existing = document.getElementById("kleap-burger");
+            if (!existing) injectHamburger();
+            burgers = [document.getElementById("kleap-burger")].filter(Boolean);
+          }
+          burgers.forEach(function (trig) {
+            if (!trig || trig.__kmWired) return;
+            trig.__kmWired = true;
+            trig.style.cursor = "pointer";
+            trig.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              openMenu();
+            });
+          });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeMenu();
+        });
+        document.addEventListener("DOMContentLoaded", setup);
+        document.addEventListener("astro:page-load", setup);
+        if (document.readyState !== "loading") setup();
+      })();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"29dbd2987b31450a84069cf67fe901d3","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body> 
+<!-- Mirrored from https://mandrake.kleap.io/ by HTTrack Website Copier/3.x [XR&CO], Sat, 24 Oct 2026 04:00:05 GMT -->
+</html>
